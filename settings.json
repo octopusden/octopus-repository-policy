@@ -1,0 +1,45 @@
+{
+  "repo": {
+    "all": {
+      "has_issues": true,
+      "has_projects": true,
+      "has_wiki": true,
+      "has_downloads": true,
+      "has_discussions": false,
+      "web_commit_signoff_required": false,
+      "allow_squash_merge": true,
+      "allow_merge_commit": false,
+      "allow_rebase_merge": true,
+      "allow_auto_merge": false,
+      "delete_branch_on_merge": true,
+      "allow_update_branch": false,
+      "use_squash_pr_title_as_default": false,
+      "squash_merge_commit_title": "COMMIT_OR_PR_TITLE",
+      "squash_merge_commit_message": "COMMIT_MESSAGES",
+      "merge_commit_title": "MERGE_MESSAGE",
+      "merge_commit_message": "PR_TITLE"
+    }
+  },
+  "security": {
+    "public": {
+      "security_and_analysis": {
+        "secret_scanning": { "status": "enabled" },
+        "secret_scanning_push_protection": { "status": "enabled" },
+        "secret_scanning_non_provider_patterns": { "status": "disabled" },
+        "secret_scanning_validity_checks": { "status": "disabled" },
+        "dependabot_security_updates": { "status": "disabled" }
+      }
+    }
+  },
+  "code_scanning_default_setup": {
+    "public": {
+      "state": "not-configured"
+    }
+  },
+  "actions_workflow": {
+    "all": {
+      "default_workflow_permissions": "write",
+      "can_approve_pull_request_reviews": false
+    }
+  }
+}
