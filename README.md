@@ -6,7 +6,8 @@ applied by the repo provisioning job.
 Nothing here is applied by this repository itself. The provisioning job (`create_repo.py`, run as
 *Create Octopusden Repo* on TeamCity) checks this repository out and reconciles one octopusden
 repository against it on every create or sync. Changing the policy therefore means a reviewed pull
-request here, and the change reaches a repository on its next create or sync.
+request here, and the change reaches a repository on its next create or sync — or everywhere at
+once through *Sync Repository Policy* (dry-run first, then apply).
 
 ## Layout
 
@@ -32,15 +33,16 @@ A repository is classified by its own GitHub topics:
 
 | Topic | Rulesets | Required checks |
 |---|---|---|
-| every repository | `main-protection` | none — 2 approvals, code-owner review, dismiss stale reviews, linear history, no force-push, no deletion |
+| every managed repository | `main-protection` | none — 2 approvals, code-owner review, dismiss stale reviews, linear history, no force-push, no deletion |
 | `hybrid-flow` | `policy/checks-common`, `policy/checks-teamcity` | `gate/merge`, `Build Validation` |
 | `public-flow` | `policy/checks-common` | `gate/merge` |
 | `gradle` or `maven` | `policy/checks-sonar` | `sonar / sonar/analysis` |
 
-`classes` in `registry.json` are mutually exclusive: a repository carrying both `hybrid-flow` and
-`public-flow` is an error, and its required checks are left as they are. `topic_overlays` add on top
-of the class. A repository with neither class topic gets only `main-protection` and whatever its
-topic overlays add.
+Only repositories carrying a class topic are managed at all; the rest of the account belongs to
+other teams and the provisioning job does not touch them. `classes` in `registry.json` are mutually
+exclusive: a repository carrying both `hybrid-flow` and `public-flow` is an error, and nothing on it
+is changed until its topics are fixed. `topic_overlays` add on top of the class — `checks-sonar`
+there also decides which repositories get a SonarCloud project.
 
 Topics can be edited by anyone with push access, so on sync a repository that has posted
 `Build Validation` is treated as `hybrid-flow` whatever its topics say, and the report asks for the
