@@ -1,0 +1,13 @@
+{
+  "classes": {
+    "hybrid-flow": ["checks-common", "checks-teamcity"],
+    "public-flow": ["checks-common"]
+  },
+  "topic_overlays": {
+    "gradle": ["checks-sonar"],
+    "maven": ["checks-sonar"]
+  },
+  "retired_rulesets": ["main-required-checks"],
+  "additions": [],
+  "waivers": []
+}
