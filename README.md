@@ -5,15 +5,18 @@ applied by the repo provisioning job.
 
 Nothing here is applied by this repository itself. The provisioning scripts in
 `releng/gh-permissions-granting` check this repository out and reconcile octopusden repositories
-against it:
+against it, through TeamCity:
 
-- **Create Octopusden Repo** (`create_repo.py <repo>`, create or sync) applies it to one repository,
-  along with everything else that job provisions.
-- **Sync Repository Policy** (`create_repo.py --all`) applies it to every managed repository at once,
-  rulesets and settings only. Dry-run unless run with Mode `apply`.
+| Build | When | Does |
+|---|---|---|
+| **Validate Repository Policy** | every push to a pull request here | dry-run of the PR's policy against every managed repository; result on the PR as the `policy/validate` status |
+| **Apply Repository Policy** | every change to `main` | applies `main` to every managed repository — rulesets and settings |
+| **Create Octopusden Repo** | by hand, one repository | create or sync, along with everything else that job provisions |
+| **Sync Repository Policy** | by hand | the fleet-wide run, dry-run or apply |
 
-Changing the policy therefore means a pull request here. Merging it changes nothing on GitHub by
-itself — see [After merging](#after-merging).
+Changing the policy therefore means a pull request here, and **merging it applies it to every
+managed repository** — see [After merging](#after-merging). The review is the pull request: its
+approvals and its `policy/validate` report.
 
 - [Layout](#layout)
 - [Which repositories are managed](#which-repositories-are-managed)
@@ -171,40 +174,40 @@ any change made by hand in the GitHub UI.
 
 ## Testing a change
 
-You need a checkout of `releng/gh-permissions-granting` next to your branch of this repository.
+**On the pull request.** Every push to a pull request here runs *Validate Repository Policy*: a
+dry-run of your branch's policy against every managed repository, reading only. It reports on the PR
+as `policy/validate`; open *Details* for the build and its `policy_sync_report.txt` artifact, which
+lists per repository the rulesets it would create, update or delete, the classic branch protection
+being replaced, and any check that classic protection required which the policy does not. Read that
+before approving: it is what the merge will do.
 
-**Validate the files** — no token needed; the same checks every run starts with:
+`policy/validate` is red whenever anything fails — a policy that does not load, a script error, or a
+repository the sync could not handle (for example one carrying both class topics). A red status
+blocks the merge.
+
+**Locally, before pushing** — optional. You need a checkout of `releng/gh-permissions-granting`
+next to your branch of this repository.
 
 ```bash
 cd gh-permissions-granting
+# the file checks every run starts with -- no token needed
 python3 -c 'import create_repo as cr, pathlib; cr.load_policy(pathlib.Path("../octopus-repository-policy")); print("policy OK")'
-```
 
-**See what it would change** — a dry-run across every managed repository; reads only, writes nothing.
-It needs the `octopusden` token, because rulesets, classic protection and settings are only readable
-by the owner:
-
-```bash
+# the same dry-run the PR gets -- needs the octopusden token, as rulesets, classic
+# protection and settings are only readable by the owner
 export GITHUB_TOKEN=$(vault kv get -field=OCTOPUS_REPO_CREATOR_TOKEN octopus/GitHub)
 python3 create_repo.py --all --policy-dir ../octopus-repository-policy
 ```
 
-The report (`policy_sync_report.txt`) lists, per repository, the rulesets it would create, update or
-delete, the classic branch protection being replaced, and any check that classic protection required
-which the policy does not. Put the relevant part in the pull request description.
-
 ## After merging
 
-Merging changes nothing on GitHub. *Run Tests* in gh-permissions-granting re-runs on this
-repository's `main` and fails if the policy no longer loads, but it applies nothing.
+A change to `main` starts *Apply Repository Policy*, which applies it to every managed repository —
+no further approval. Its `policy_sync_report.txt` lists what it changed; a red build means at least
+one repository could not be brought in line, and the report says which and why. Applies run one at a
+time, and running one again right after reports no changes.
 
-A change reaches a repository when:
-
-- someone creates or syncs that repository through **Create Octopusden Repo**, or
-- someone runs **Sync Repository Policy** — first with Mode `dry-run`, reads
-  `policy_sync_report.txt`, then with Mode `apply`.
-
-Running either again right after reports no changes.
+Everything else stays as it was: a repository created or synced through *Create Octopusden Repo*
+gets the policy of `main` at that moment.
 
 ## Reference
 
