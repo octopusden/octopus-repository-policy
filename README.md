@@ -32,7 +32,7 @@ approvals and its `policy/validate` report.
 policies/
   main-protection.json    baseline, applied to every managed repository
   checks-common.json      policy/checks-common   -> gate/merge
-  checks-teamcity.json    policy/checks-teamcity -> Build Validation
+  checks-build.json       policy/checks-build    -> build/integration-a
   checks-sonar.json       policy/checks-sonar    -> sonar / sonar/analysis
 registry.json             which rulesets a repository gets
 settings.json             repository settings, by visibility
@@ -53,7 +53,7 @@ not a change here.
 | The repository has | Rulesets | Required checks |
 |---|---|---|
 | any class topic | `main-protection` | none — 2 approvals, code-owner review, dismiss stale reviews, linear history, no force-push, no deletion |
-| `hybrid-flow` | `policy/checks-common`, `policy/checks-teamcity` | `gate/merge`, `Build Validation` |
+| `hybrid-flow` | `policy/checks-common`, `policy/checks-build` | `gate/merge`, `build/integration-a` |
 | `public-flow` | `policy/checks-common` | `gate/merge` |
 | `gradle` or `maven` topic | `policy/checks-sonar` | `sonar / sonar/analysis` |
 
@@ -110,7 +110,7 @@ Example: every `hybrid-flow` repository must also pass `GitGuardian Security Che
 
    ```json
    "classes": {
-     "hybrid-flow": ["checks-common", "checks-teamcity", "checks-gitguardian"],
+     "hybrid-flow": ["checks-common", "checks-build", "checks-gitguardian"],
      "public-flow": ["checks-common"]
    }
    ```
@@ -122,7 +122,7 @@ Example: every `hybrid-flow` repository must also pass `GitGuardian Security Che
 
 ```json
 "additions": [
-  { "name": "octopus-foo", "rulesets": ["checks-teamcity"], "note": "has a TeamCity build of record" }
+  { "name": "octopus-foo", "rulesets": ["checks-build"], "note": "has a TeamCity build of record" }
 ]
 ```
 
@@ -133,8 +133,8 @@ for the reader.
 
 ```json
 "waivers": [
-  { "name": "octopus-foo", "drop": ["checks-teamcity"],
-    "reason": "no TeamCity build posts Build Validation yet",
+  { "name": "octopus-foo", "drop": ["checks-build"],
+    "reason": "no TeamCity build posts build/integration-a yet",
     "ticket": "CD-1234", "review_by": "2026-12-31" }
 ]
 ```
