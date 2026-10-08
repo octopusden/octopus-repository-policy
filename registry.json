@@ -1,6 +1,6 @@
 {
   "classes": {
-    "hybrid-flow": ["checks-common", "checks-teamcity"],
+    "hybrid-flow": ["checks-common", "checks-build"],
     "public-flow": ["checks-common"]
   },
   "topic_overlays": {
@@ -10,11 +10,11 @@
   "retired_rulesets": ["main-required-checks"],
   "additions": [],
   "waivers": [
-    { "name": "octopus-components-lifecycle-service", "drop": ["checks-teamcity", "checks-sonar"],
-      "reason": "no TeamCity build posts Build Validation, and no workflow posts sonar / sonar/analysis, yet",
+    { "name": "octopus-components-lifecycle-service", "drop": ["checks-build", "checks-sonar"],
+      "reason": "no TeamCity build posts build/integration-a, and no workflow posts sonar / sonar/analysis, yet",
       "review_by": "2026-12-31" },
-    { "name": "octopus-cve-validation-service", "drop": ["checks-teamcity", "checks-sonar"],
-      "reason": "no TeamCity build posts Build Validation, and no workflow posts sonar / sonar/analysis, yet",
+    { "name": "octopus-cve-validation-service", "drop": ["checks-build", "checks-sonar"],
+      "reason": "no TeamCity build posts build/integration-a, and no workflow posts sonar / sonar/analysis, yet",
       "review_by": "2026-12-31" },
     { "name": "octopus-mcs-distribution-builder", "drop": ["checks-sonar"],
       "reason": "no workflow posts sonar / sonar/analysis yet",

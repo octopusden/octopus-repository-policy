@@ -1,5 +1,5 @@
 {
-  "name": "policy/checks-teamcity",
+  "name": "policy/checks-build",
   "target": "branch",
   "enforcement": "active",
   "conditions": {
@@ -13,7 +13,7 @@
       "type": "required_status_checks",
       "parameters": {
         "required_status_checks": [
-          { "context": "Build Validation" }
+          { "context": "build/integration-a" }
         ],
         "strict_required_status_checks_policy": false
       }
