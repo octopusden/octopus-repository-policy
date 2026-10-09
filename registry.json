@@ -1,7 +1,7 @@
 {
   "classes": {
-    "hybrid-flow": ["checks-common", "checks-build"],
-    "public-flow": ["checks-common"]
+    "hybrid-flow": ["checks-common", "checks-build", "checks-wl"],
+    "public-flow": ["checks-common", "checks-wl"]
   },
   "topic_overlays": {
     "gradle": ["checks-sonar"],
