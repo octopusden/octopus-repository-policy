@@ -33,6 +33,7 @@ policies/
   main-protection.json    baseline, applied to every managed repository
   checks-common.json      policy/checks-common   -> gate/merge
   checks-build.json       policy/checks-build    -> build/integration-a
+  checks-wl.json          policy/checks-wl       -> security/wl-a
   checks-sonar.json       policy/checks-sonar    -> sonar / sonar/analysis
 registry.json             which rulesets a repository gets
 settings.json             repository settings, by visibility
@@ -53,8 +54,8 @@ not a change here.
 | The repository has | Rulesets | Required checks |
 |---|---|---|
 | any class topic | `main-protection` | none — 2 approvals, code-owner review, dismiss stale reviews, linear history, no force-push, no deletion |
-| `hybrid-flow` | `policy/checks-common`, `policy/checks-build` | `gate/merge`, `build/integration-a` |
-| `public-flow` | `policy/checks-common` | `gate/merge` |
+| `hybrid-flow` | `policy/checks-common`, `policy/checks-build`, `policy/checks-wl` | `gate/merge`, `build/integration-a`, `security/wl-a` |
+| `public-flow` | `policy/checks-common`, `policy/checks-wl` | `gate/merge`, `security/wl-a` |
 | `gradle` or `maven` topic | `policy/checks-sonar` | `sonar / sonar/analysis` |
 
 In order: `main-protection`, then the rulesets of its class (`classes`), then those of any matching

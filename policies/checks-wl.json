@@ -1,0 +1,22 @@
+{
+  "name": "policy/checks-wl",
+  "target": "branch",
+  "enforcement": "active",
+  "conditions": {
+    "ref_name": {
+      "include": ["~DEFAULT_BRANCH"],
+      "exclude": []
+    }
+  },
+  "rules": [
+    {
+      "type": "required_status_checks",
+      "parameters": {
+        "required_status_checks": [
+          { "context": "security/wl-a" }
+        ],
+        "strict_required_status_checks_policy": false
+      }
+    }
+  ]
+}
