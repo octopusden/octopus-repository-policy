@@ -79,9 +79,13 @@ in each and look at its checks), or give the ones that don't a waiver.
 
 ## Collaborator access
 
-`contributors.json` and `repositories.json` say who may push where. They are applied by the access
-sync automation, not by this repository. They sit at the repository root,
+`contributors.json` and `repositories.json` say who may push where. They will be applied by the
+access sync automation, not by this repository. They sit at the repository root,
 not in `policies/`, because everything in `policies/` is loaded as a ruleset.
+
+**Not applied yet.** The access sync is not in place, so editing these files changes no access
+today. Until it is, grant and remove access as before, and keep these files in step with what you
+change. Everything below describes how access will work once the sync runs.
 
 octopusden is a user account, not an organization, so access is per-repository collaborators, granted
 through invitations that expire after 7 days.
