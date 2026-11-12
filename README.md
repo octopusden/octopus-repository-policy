@@ -88,10 +88,10 @@ through invitations that expire after 7 days.
 
 | File | Key | Meaning |
 |---|---|---|
-| `contributors.json` | `active` | F1 contributors: push on every repository in `repositories.json` `active` |
+| `contributors.json` | `active` | collaborators: push on every repository in `repositories.json` `active` |
 | | `service` | bot accounts: push on every listed repository, `service_only` ones included |
 | | `others` | `[{ "login", "reason" }]` — people who keep the access and pending invitations they already have, and are never granted more |
-| `repositories.json` | `active` | repositories the F1 contributors work in |
+| `repositories.json` | `active` | repositories the collaborators work in |
 | | `service_only` | repositories where only `service` accounts may be collaborators |
 
 Logins keep their exact GitHub case; keep each list sorted case-insensitively. A repository must not
