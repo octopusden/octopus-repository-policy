@@ -1,7 +1,8 @@
 # octopus-repository-policy
 
-Repository policy for octopusden: branch rulesets, required status checks, repository settings and collaborator access,
-applied by the repo provisioning job.
+Repository policy for octopusden: branch rulesets, required status checks and repository settings,
+applied by the repo provisioning job. It also holds the collaborator access lists, which are not
+applied yet (see [Collaborator access](#collaborator-access)).
 
 Nothing here is applied by this repository itself. The provisioning scripts in
 `releng/gh-permissions-granting` check this repository out and reconcile octopusden repositories
