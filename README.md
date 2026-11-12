@@ -80,7 +80,7 @@ in each and look at its checks), or give the ones that don't a waiver.
 ## Collaborator access
 
 `contributors.json` and `repositories.json` say who may push where. They are applied by the access
-sync in `releng/gh-permissions-granting`, not by this repository. They sit at the repository root,
+sync automation, not by this repository. They sit at the repository root,
 not in `policies/`, because everything in `policies/` is loaded as a ruleset.
 
 octopusden is a user account, not an organization, so access is per-repository collaborators, granted
@@ -117,8 +117,8 @@ To change access, open a pull request here:
   not named in `contributors.json` removed.
 - **Keep someone's existing access without granting more:** add them to `others` with a `reason`.
 - **Give someone outside the team access to one repository:** first add them to `others` with a
-  `reason`. Once that is merged, run *Grant Access To Repos* in `releng/gh-permissions-granting` for
-  that login and repository; it will refuse anyone not in `contributors.json` and any `service_only`
+  `reason`. Once that is merged, run the one-off grant job of the access automation for that
+  login and repository; it will refuse anyone not in `contributors.json` and any `service_only`
   repository. The invitation expires after 7 days, and the sync keeps it and, once accepted, the
   access. If it expires, run the grant again.
 
