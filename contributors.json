@@ -1,0 +1,15 @@
+{
+  "active": ["adellinekania", "fishinitself", "nabilmuafa", "pgorbachev", "qu0d", "rodemark"],
+  "service": ["gh-octopusden"],
+  "others": [
+    { "login": "716SKITT", "reason": "SI member" },
+    { "login": "aragastmatb", "reason": "SI member" },
+    { "login": "bl1nkker", "reason": "SI member" },
+    { "login": "dmitry-ry", "reason": "existing access, kept as of 2026-11-11" },
+    { "login": "ivansa-ru", "reason": "SI member" },
+    { "login": "Rabbit-00", "reason": "SI member" },
+    { "login": "rifkhia", "reason": "SI member" },
+    { "login": "ruslanchik196", "reason": "SI member" },
+    { "login": "SergeyAleksejev", "reason": "existing access, kept as of 2026-11-11" }
+  ]
+}

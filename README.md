@@ -1,7 +1,8 @@
 # octopus-repository-policy
 
 Repository policy for octopusden: branch rulesets, required status checks and repository settings,
-applied by the repo provisioning job.
+applied by the repo provisioning job. It also holds the collaborator access lists, which are not
+applied yet (see [Collaborator access](#collaborator-access)).
 
 Nothing here is applied by this repository itself. The provisioning scripts in
 `releng/gh-permissions-granting` check this repository out and reconcile octopusden repositories
@@ -21,6 +22,7 @@ approvals and its `policy/validate` report.
 - [Layout](#layout)
 - [Which repositories are managed](#which-repositories-are-managed)
 - [Which rulesets a repository gets](#which-rulesets-a-repository-gets)
+- [Collaborator access](#collaborator-access)
 - [How to](#how-to)
 - [Testing a change](#testing-a-change)
 - [After merging](#after-merging)
@@ -37,13 +39,19 @@ policies/
   checks-sonar.json       policy/checks-sonar    -> sonar / sonar/analysis
 registry.json             which rulesets a repository gets
 settings.json             repository settings, by visibility
+contributors.json         who gets collaborator access
+repositories.json         which repositories the access applies to
 ```
 
 ## Which repositories are managed
 
-Only repositories carrying exactly one **class topic** — `hybrid-flow` or `public-flow` — are managed.
-The rest of the account belongs to other teams: the scripts refuse to create or sync them and the
-fleet-wide sync skips them without a single call.
+For rulesets and settings, only repositories carrying exactly one **class topic** — `hybrid-flow` or
+`public-flow` — are managed. Repositories without a class topic get no rulesets or settings from
+here: the scripts refuse to create or sync them and the fleet-wide sync skips them without a single
+call.
+
+Collaborator access is different: it covers every octopusden repository, whatever its topics, under
+the rules in [Collaborator access](#collaborator-access).
 
 The class comes from the topic alone. A repository with both class topics is an error and nothing on
 it is changed until its topics are fixed. Fixing a wrong class is a topic change on the repository,
@@ -69,6 +77,55 @@ also stops Sonar provisioning for that repository.
 for a check that never arrives: no error, no timeout, the pull request just stays blocked. Before
 requiring a check for a class, confirm every repository of that class produces it (open a recent PR
 in each and look at its checks), or give the ones that don't a waiver.
+
+## Collaborator access
+
+`contributors.json` and `repositories.json` say who may push where. They will be applied by the
+access sync automation, not by this repository. They sit at the repository root,
+not in `policies/`, because everything in `policies/` is loaded as a ruleset.
+
+**Not applied yet.** The access sync is not in place, so editing these files changes no access
+today. Until it is, grant and remove access as before, and keep these files in step with what you
+change. Everything below describes how access will work once the sync runs.
+
+octopusden is a user account, not an organization, so access is per-repository collaborators, granted
+through invitations that expire after 7 days.
+
+| File | Key | Meaning |
+|---|---|---|
+| `contributors.json` | `active` | contributors: push on every repository in `repositories.json` `active` |
+| | `service` | bot accounts: push on every listed repository, `service_only` ones included |
+| | `others` | `[{ "login", "reason" }]` — people who keep the access and pending invitations they already have, and are never granted more |
+| `repositories.json` | `active` | repositories the contributors work in |
+| | `service_only` | repositories where only `service` accounts may be collaborators |
+
+Logins keep their exact GitHub case; keep each list sorted case-insensitively. A repository must not
+be in both of its lists.
+
+What the sync does, per kind of repository:
+
+| Who | `active` repos | `service_only` repos | unlisted repos (every other octopusden repo) |
+|---|---|---|---|
+| `active` | push (granted if missing, expired invitations re-sent) | removed | untouched |
+| `service` | push | push | untouched |
+| `others` | existing access and pending invitations kept, nothing added | removed | untouched |
+| anyone else | removed, invitations cancelled | removed | removed |
+| owner `octopusden` | never touched | never touched | never touched |
+
+Access is never downgraded: someone who already has more than push keeps it.
+
+To change access, open a pull request here:
+
+- **Add or remove a person:** edit the list in `contributors.json`. A person who leaves every list
+  loses access to every octopusden repository.
+- **Add or remove a repository:** edit `repositories.json`. A repository in neither list has everyone
+  not named in `contributors.json` removed.
+- **Keep someone's existing access without granting more:** add them to `others` with a `reason`.
+- **Give someone outside the team access to one repository:** first add them to `others` with a
+  `reason`. Once that is merged, run the one-off grant job of the access automation for that
+  login and repository; it will refuse anyone not in `contributors.json` and any `service_only`
+  repository. The invitation expires after 7 days, and the sync keeps it and, once accepted, the
+  access. If it expires, run the grant again.
 
 ## How to
 
