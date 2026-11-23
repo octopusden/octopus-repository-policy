@@ -201,6 +201,23 @@ A waiver drops overlays the repository would otherwise get — never `main-prote
 `review_by` (`YYYY-MM-DD`) are required; once the date has passed, every run on that repository
 reports the waiver as overdue. Remove the entry when the reason no longer holds.
 
+### Lower the required approvals on one repository
+
+```json
+"baseline_overrides": [
+  { "name": "octopus-foo",
+    "pull_request": { "required_approving_review_count": 1 },
+    "reason": "only adopted by one side for now",
+    "ticket": "CD-1234", "review_by": "2027-06-30" }
+]
+```
+
+Replaces a value in `main-protection` for that repository only. Only
+`pull_request.required_approving_review_count` can be overridden, from 1 to 10; any other key is
+rejected. An override equal to the baseline value is rejected too — remove the entry instead.
+`reason` and `review_by` are required; once the date has passed, every run on that repository
+reports the override as overdue.
+
 ### Change what every repository gets
 
 `policies/main-protection.json` applies to every managed repository: approvals, code-owner review,
@@ -297,6 +314,7 @@ Unknown top-level keys are rejected, so a typo fails instead of being ignored.
 | `topic_overlays` | `{ "<topic>": ["<stem>", ...] }` | overlays added when the repository carries the topic, on top of its class |
 | `additions` | `[{ "name", "rulesets", "note"? }]` | overlays added to one repository |
 | `waivers` | `[{ "name", "drop", "reason", "review_by", "ticket"? }]` | overlays removed from one repository. `reason` and `review_by` (`YYYY-MM-DD`) are required |
+| `baseline_overrides` | `[{ "name", "<rule type>": { "<parameter>": value }, "reason", "review_by", "ticket"? }]` | `main-protection` parameters replaced for one repository, at most one entry per repository. Only `pull_request.required_approving_review_count` (1–10) is accepted for now. `reason` and `review_by` (`YYYY-MM-DD`) are required |
 | `retired_rulesets` | `["<ruleset name>", ...]` | rulesets the scripts used to create under other names; deleted on sync once the policy's own have landed. Cannot name `main-protection` or a `policy/*` ruleset |
 
 Every `<stem>` must be a file in `policies/`. Topics must be valid GitHub topics (lowercase letters,
