@@ -26,15 +26,15 @@
   "baseline_overrides": [
     { "name": "octopus-license-service",
       "pull_request": { "required_approving_review_count": 1 },
-      "reason": "only adopted by one side for now",
+      "reason": "maintained by a single team for now; return to 2 approvals once a second team reviews this repository",
       "review_by": "2027-06-30" },
     { "name": "octopus-sonar-automation",
       "pull_request": { "required_approving_review_count": 1 },
-      "reason": "only adopted by one side for now",
+      "reason": "maintained by a single team for now; return to 2 approvals once a second team reviews this repository",
       "review_by": "2027-06-30" },
     { "name": "octopus-component-provisioning-service",
       "pull_request": { "required_approving_review_count": 1 },
-      "reason": "only adopted by one side for now",
+      "reason": "maintained by a single team for now; return to 2 approvals once a second team reviews this repository",
       "review_by": "2027-06-30" }
   ]
 }

@@ -32,7 +32,7 @@ approvals and its `policy/validate` report.
 
 ```
 policies/
-  main-protection.json    baseline, applied to every managed repository
+  main-protection.json    baseline, applied to every managed repository (unless baseline_overrides)
   checks-common.json      policy/checks-common   -> gate/merge
   checks-build.json       policy/checks-build    -> build/integration-a
   checks-wl.json          policy/checks-wl       -> security/wl-a
@@ -61,7 +61,7 @@ not a change here.
 
 | The repository has | Rulesets | Required checks |
 |---|---|---|
-| any class topic | `main-protection` | none — 2 approvals, code-owner review, dismiss stale reviews, linear history, no force-push, no deletion |
+| any class topic | `main-protection` | none — 2 approvals (unless the repository has a `baseline_overrides` entry), code-owner review, dismiss stale reviews, linear history, no force-push, no deletion |
 | `hybrid-flow` | `policy/checks-common`, `policy/checks-build`, `policy/checks-wl` | `gate/merge`, `build/integration-a`, `security/wl-a` |
 | `public-flow` | `policy/checks-common`, `policy/checks-wl` | `gate/merge`, `security/wl-a` |
 | `gradle` or `maven` topic | `policy/checks-sonar` | `sonar / sonar/analysis` |
@@ -193,7 +193,7 @@ for the reader.
 "waivers": [
   { "name": "octopus-foo", "drop": ["checks-build"],
     "reason": "no TeamCity build posts build/integration-a yet",
-    "ticket": "CD-1234", "review_by": "2026-12-31" }
+    "ticket": "PROJ-123", "review_by": "2026-12-31" }
 ]
 ```
 
@@ -201,14 +201,14 @@ A waiver drops overlays the repository would otherwise get — never `main-prote
 `review_by` (`YYYY-MM-DD`) are required; once the date has passed, every run on that repository
 reports the waiver as overdue. Remove the entry when the reason no longer holds.
 
-### Lower the required approvals on one repository
+### Change the required approvals on one repository
 
 ```json
 "baseline_overrides": [
   { "name": "octopus-foo",
     "pull_request": { "required_approving_review_count": 1 },
-    "reason": "only adopted by one side for now",
-    "ticket": "CD-1234", "review_by": "2027-06-30" }
+    "reason": "maintained by a single team for now",
+    "ticket": "PROJ-123", "review_by": "2027-06-30" }
 ]
 ```
 
@@ -221,7 +221,7 @@ reports the override as overdue.
 ### Change what every repository gets
 
 `policies/main-protection.json` applies to every managed repository: approvals, code-owner review,
-linear history and so on. Change it with care — the next sync rewrites it everywhere.
+linear history and so on — unless the repository has a `baseline_overrides` entry. Change it with care — the next sync rewrites it everywhere.
 
 Self-merge bypasses are not declared here. The provisioning job adds the logins listed in its own
 `self-merge-bypass.txt` to `main-protection` at run time, as `bypass_mode: pull_request`.
