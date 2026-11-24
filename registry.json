@@ -22,5 +22,19 @@
     { "name": "octopus-parent", "drop": ["checks-sonar"],
       "reason": "no workflow posts sonar / sonar/analysis yet",
       "review_by": "2026-12-31" }
+  ],
+  "baseline_overrides": [
+    { "name": "octopus-license-service",
+      "pull_request": { "required_approving_review_count": 1 },
+      "reason": "maintained by a single team for now; return to 2 approvals once a second team reviews this repository",
+      "review_by": "2027-06-30" },
+    { "name": "octopus-sonar-automation",
+      "pull_request": { "required_approving_review_count": 1 },
+      "reason": "maintained by a single team for now; return to 2 approvals once a second team reviews this repository",
+      "review_by": "2027-06-30" },
+    { "name": "octopus-component-provisioning-service",
+      "pull_request": { "required_approving_review_count": 1 },
+      "reason": "maintained by a single team for now; return to 2 approvals once a second team reviews this repository",
+      "review_by": "2027-06-30" }
   ]
 }
